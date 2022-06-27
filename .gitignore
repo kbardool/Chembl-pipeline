@@ -1,0 +1,6 @@
+output/*
+input/*
+*.csv
+*.npy
+*.code-workspace
+.ipynb_checkpoints
