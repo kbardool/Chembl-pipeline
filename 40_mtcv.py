@@ -30,7 +30,10 @@ def mtcv(mask, nfolds=None, pfolds=None, seed=None):
         np.random.seed(seed)
 
     df = pd.DataFrame({"row": np.arange(mask.shape[0]), "size": comp_sizes})
+    ## Randomize the dataframe
     df1 = df.sample(frac=1)
+    
+    ## Sort in descending compound count order 
     df1.sort_values("size", inplace=True, ascending=False)
 
     fold_sizes = np.zeros((nfolds, mask.shape[1]), dtype=np.int8)
@@ -45,6 +48,7 @@ def mtcv(mask, nfolds=None, pfolds=None, seed=None):
         idx   = df1.index[i]
 
         #for j in np.random.permutation(nfolds):
+        # make a random list of the folds, and go through the list 
         for j in np.random.choice(farray, size=nfolds, replace=False, p=pfolds):
             if mask[idx,:].dot((fold_sizes[j,:] + mask[idx,:] > max_fold_sizes[:,j]).transpose()) == 0:
                 ## compound fits into fold j
@@ -134,9 +138,7 @@ tmp2 = pd.merge(tmp1, cmpd_list, left_on="cmpd_id", right_on=1),
 
 join = pd.merge(tmp2[0], variable_list, left_on="variable", right_on=0) #WHY [0]
 
-I = join["cid"].to_numpy()
-J = (Nvar * join["tid"] + join["vid"]).to_numpy()
-V = np.ones(len(I))
+
 
 #-----------------------------------------------------------------------------------------------------
 # Build COOrdiante formatted sparse matrices for Ymask and  Y
@@ -155,6 +157,10 @@ V = np.ones(len(I))
 #
 #
 #-----------------------------------------------------------------------------------------------------
+I = join["cid"].to_numpy()
+J = (Nvar * join["tid"] + join["vid"]).to_numpy()
+V = np.ones(len(I))
+
 Ymask = scipy.sparse.coo_matrix((V,(I,J)),(Ncmpd,Ncol))
 
 Y = scipy.sparse.coo_matrix((join["value"].to_numpy(),(I,J)),(Ncmpd, Ncol))

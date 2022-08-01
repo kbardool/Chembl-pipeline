@@ -83,7 +83,7 @@ logging.info("Step10/ Filtering and thresholding activity data")
 # Pick the minimum
 logging.info("Step10/ Grouping by target_id [cmpd_id].min() ")
 df = df.groupby(["target_id","cmpd_id"]).min().reset_index()
-df.to_csv('2_groupby_min.csv')
+df.to_csv('Step10/2_groupby_min.csv')
 
 # at least N compounds per assay
 logging.info("Step10/Grouping by target_id [cmpd_id].nunique() ")
@@ -119,6 +119,7 @@ df.to_csv("Step10/6_df.csv")
 logging.info("Step10/ Unpivot target_id and cmpd_id ")
 # Unpivot df from wide to long format
 melted = pd.melt(df, id_vars=['target_id','cmpd_id'], value_vars=value_vars).dropna()
+df.to_csv("Step10/7_melted.csv")
 
 # Write threshold file
 melted.to_csv('%s/%s_thresh.csv' % (outdir, options.prefix), index = False)
