@@ -4,3 +4,4 @@ input/*
 *.npy
 *.code-workspace
 .ipynb_checkpoints
+input_from_adam
